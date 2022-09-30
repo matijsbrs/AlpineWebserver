@@ -29,6 +29,12 @@ Check the files:
 - Dockerfile
 - entrypoint.sh
 
+## Git
+You can change the url using: 
+`git remote set-url origin new.git.url/here`
+
+
+
 The are to some extent documented. 
 
 Happy coding.
