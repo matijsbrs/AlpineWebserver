@@ -11,7 +11,7 @@ include $(dpl)
 export $(shell sed 's/=.*//' $(dpl))
 
 # grep the version from the mix file
-VERSION=$(APP_MAJOR_VERSION).$(APP_MINOR_VERSION)-$(APP_BUILD)
+VERSION=$(APP_MAJOR_VERSION).$(APP_MINOR_VERSION).$(APP_BUILD)
 
 
 # HELP
@@ -24,11 +24,14 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
+# increase the build counter 
+# update all version fields. 
 buildinc: ## Increase the build counter automatically
 	@bash buildinc.sh
 	@export `cat deploy.env | grep =`
 	@echo "Increased build counter: " $(APP_BUILD)
 	VERSION=$(APP_MAJOR_VERSION).$(APP_MINOR_VERSION).$(APP_BUILD)
+	sed -i -E 's/^(\ *version\ *=*).*/\1"$(VERSION)"/' Dockerfile 
 	
 # DOCKER TASKS
 # Build the container
@@ -66,13 +69,12 @@ publish-version: tag-version ## Publish the `{version}` taged container to ECR
 # Docker tagging
 tag: tag-latest tag-version ## Generate container tags for the `{version}` ans `latest` tags
 
-tag-latest: ## Generate container `{version}` tag
+tag-latest: ## Generate container `{latest}` tag
 	@echo 'create tag latest'
 	docker tag $(APP_NAME) $(DOCKER_REPO)/$(APP_NAME):latest
 
-tag-version: ## Generate container `latest` tag
+tag-version: ## Generate container `version` tag
 	@echo 'create tag $(VERSION)'
-	
 	docker tag $(APP_NAME) $(DOCKER_REPO)/$(APP_NAME):$(VERSION)
 
 # HELPERS

@@ -1,21 +1,16 @@
 #! /bin/sh
 
+# Adapt the USER to the given GID and UID to integrate with the host computer.
+groupmod --gid $GID $USER
+usermod --uid $UID $USER
 
-groupmod --gid $GID lighttpd
-usermod --uid $UID lighttpd
+# An example operation. 
+cp /app/deploy.env /app/resources
 
-mkdir -p /app/bin
-mkdir -p /app/resources
+# change the user rights to a folder
+chown -R $USER:$USER /app/resources
+chmod -R 755 /app/resources
 
-# chown -R  $PUID:$PGID /var/run/php /var/log/lighttpd /var/lib/lighttpd
-chown -R lighttpd:lighttpd /var/www /var/run/php /var/log/lighttpd /var/lib/lighttpd
-chmod -R 755 /var/log/lighttpd
-
-
-cat /opt/deploy.env | grep = > /var/www/html/deploy.txt
-
-
-
-# exec 3>&1
-
-exec lighttpd -D -f /etc/lighttpd/lighttpd.conf
+# execute the program as given user
+# this is not explicitly necessary. 
+exec su $USER -c 'cmatrix -s'
