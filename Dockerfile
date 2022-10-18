@@ -1,6 +1,6 @@
 FROM alpine:latest
 LABEL maintainer="Matijs Behrens" \
-      version="1.1.1"
+      version="1.1.2"
 
 # Add edge/community  repos for usermod (shadow) 
 # RUN echo http://dl-2.alpinelinux.org/alpine/v3.16/community/ >> /etc/apk/repositories
